@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.hmg.servicecloud</groupId>
+    <artifactId>hmg_fedlet</artifactId>
+    <packaging>war</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>HMG Fedlet distribution</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.1</version>
+        </dependency>
+
+        <!--  The following dependencies either do not exist in a public
+         maven repository, or it's not clear which version is included in the
+         fedlet. So for now just use the versions of the jars from the fedlet directly ;-(
+
+		<dependency>
+			<groupId>com.forgerock.openam</groupId>
+			<artifactId>opensso-sharedlib</artifactId>
+			<version>20100913</version>
+		</dependency>
+		<dependency>
+			<groupId>com.forgerock.openam</groupId>
+			<artifactId>openfedlib</artifactId>
+			<version>20100913</version>
+		</dependency>
+		<dependency>
+			<groupId>com.forgerock.openam</groupId>
+			<artifactId>idpdiscovery</artifactId>
+			<version>20100913</version>
+		</dependency>
+		<dependency>
+			<groupId>com.forgerock.openam</groupId>
+			<artifactId>esapiport</artifactId>
+			<version>20100913</version>
+		</dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.msv.datatype.xsd</groupId>
+            <artifactId>xsdlib</artifactId>
+            <version>20060615</version>
+        </dependency>
+		-->
+
+
+    </dependencies>
+</project>
