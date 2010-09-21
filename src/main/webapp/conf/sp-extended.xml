@@ -62,8 +62,7 @@
            <Value>exact</Value>
         </Attribute>
         <Attribute name="attributeMap">
-           <Value>UserToken=UserToken</Value>
-           <Value>huid=huid</Value>
+           <Value>*=*</Value>
         </Attribute>
         <Attribute name="saml2AuthModuleName">
            <Value></Value>

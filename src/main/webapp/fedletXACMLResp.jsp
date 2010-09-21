@@ -30,23 +30,8 @@
    3) Displays the Result.
 --%>
 
-<%@ page import="com.sun.identity.shared.debug.Debug" %>
-<%@ page import="com.sun.identity.saml.common.SAMLUtils" %>
-<%@ page import="com.sun.identity.saml2.assertion.Assertion" %>
-<%@ page import="com.sun.identity.saml2.assertion.AssertionFactory" %>
-<%@ page import="com.sun.identity.saml2.assertion.Attribute" %>
-<%@ page import="com.sun.identity.saml2.assertion.NameID" %>
-<%@ page import="com.sun.identity.saml2.common.SAML2Constants" %>
 <%@ page import="com.sun.identity.saml2.common.SAML2Utils" %>
-<%@ page import="com.sun.identity.saml2.common.SAML2Exception" %>
 <%@ page import="com.sun.identity.saml2.profile.XACMLQueryUtil" %>
-<%@ page import="com.sun.identity.saml2.protocol.Response" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.Iterator" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Map" %>
 <%@ page import="org.owasp.esapi.ESAPI" %>
 
 <%
@@ -60,82 +45,106 @@
 <html>
 <head>
     <title>Sample Fedlet XACML Query Application</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <link rel="stylesheet" type="text/css" href="<%= deployuri %>/com_sun_web_ui/css/css_ns6up.css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+    <link rel="stylesheet" type="text/css" href="<%= deployuri %>/com_sun_web_ui/css/css_ns6up.css"/>
 </head>
 
 <body>
-<div class="MstDiv"><table width="100%" border="0" cellpadding="0" cellspacing="0" class="MstTblTop" title="">
-<tbody><tr>
-<td nowrap="nowrap">&nbsp;</td>
-<td nowrap="nowrap">&nbsp;</td>
-</tr></tbody></table>
+<div class="MstDiv">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="MstTblTop" title="">
+        <tbody>
+        <tr>
+            <td nowrap="nowrap">&nbsp;</td>
+            <td nowrap="nowrap">&nbsp;</td>
+        </tr>
+        </tbody>
+    </table>
 
-<table width="100%" border="0" cellpadding="0" cellspacing="0" class="MstTblBot" title="">
-<tbody><tr>
-<td class="MstTdTtl" width="99%">
-<div class="MstDivTtl"><img name="ProdName" src="<%= deployuri %>/console/images/PrimaryProductName.png" alt="" /></div></td><td class="MstTdLogo" width="1%"><img name="RMRealm.mhCommon.BrandLogo" src="<%= deployuri %>/com_sun_web_ui/images/other/javalogo.gif" alt="Java(TM) Logo" border="0" height="55" width="31" /></td></tr></tbody></table>
-<table class="MstTblEnd" border="0" cellpadding="0" cellspacing="0" width="100%"><tbody><tr><td><img name="RMRealm.mhCommon.EndorserLogo" src="<%= deployuri %>/com_sun_web_ui/images/masthead/masthead-sunname.gif" alt="Sun(TM) Microsystems,
-Inc." align="right" border="0" height="10" width="108" /></td></tr></tbody></table></div><div class="SkpMedGry1"><a name="SkipAnchor2089" id="SkipAnchor2089"></a></div>
-<div class="SkpMedGry1"><a href="#SkipAnchor4928"><img src="<%= deployuri %>/com_sun_web_ui/images/other/dot.gif" alt="Jump Over Tab Navigation Area. Current Selection is: Access Control" border="0" height="1" width="1" /></a></div>
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="MstTblBot" title="">
+        <tbody>
+        <tr>
+            <td class="MstTdTtl" width="99%">
+                <div class="MstDivTtl"><img name="ProdName" src="<%= deployuri %>/console/images/PrimaryProductName.png"
+                                            alt=""/></div>
+            </td>
+            <td class="MstTdLogo" width="1%"><img name="RMRealm.mhCommon.BrandLogo"
+                                                  src="<%= deployuri %>/com_sun_web_ui/images/other/javalogo.gif"
+                                                  alt="Java(TM) Logo" border="0" height="55" width="31"/></td>
+        </tr>
+        </tbody>
+    </table>
+    <table class="MstTblEnd" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tbody>
+        <tr>
+            <td><img name="RMRealm.mhCommon.EndorserLogo"
+                     src="<%= deployuri %>/com_sun_web_ui/images/masthead/masthead-sunname.gif" alt="Sun(TM) Microsystems,
+Inc." align="right" border="0" height="10" width="108"/></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="SkpMedGry1"><a id="SkipAnchor2089"></a></div>
+<div class="SkpMedGry1"><a href="#SkipAnchor4928"><img src="<%= deployuri %>/com_sun_web_ui/images/other/dot.gif"
+                                                       alt="Jump Over Tab Navigation Area. Current Selection is: Access Control"
+                                                       border="0" height="1" width="1"/></a></div>
 
 
 <%
     try {
         String idpEntityID = request.getParameter("idpEntityID");
-	if ((idpEntityID == null) || 
-            (idpEntityID.length() == 0)) {
-           response.sendError(response.SC_BAD_REQUEST,
-			   SAML2Utils.bundle.getString("nullIDPEntityID"));
-	    return;
-	}
+        if ((idpEntityID == null) ||
+                (idpEntityID.length() == 0)) {
+            response.sendError(response.SC_BAD_REQUEST,
+                    SAML2Utils.bundle.getString("nullIDPEntityID"));
+            return;
+        }
 
         String spEntityID = request.getParameter("spEntityID");
-	if ((spEntityID == null) || 
-            (spEntityID.length() == 0)) {
-           response.sendError(response.SC_BAD_REQUEST,
-			   SAML2Utils.bundle.getString("nullSPEntityID"));
-	    return;
-	}
+        if ((spEntityID == null) ||
+                (spEntityID.length() == 0)) {
+            response.sendError(response.SC_BAD_REQUEST,
+                    SAML2Utils.bundle.getString("nullSPEntityID"));
+            return;
+        }
 
         String nameIDValue = request.getParameter("nameIDValue");
-        String newNameIDValue = nameIDValue.replace("%2F","/");
+        String newNameIDValue = nameIDValue.replace("%2F", "/");
 
         String resource = request.getParameter("resource");
         String action = request.getParameter("action");
-	String serviceName = "iPlanetAMWebAgentService";
+        String serviceName = "iPlanetAMWebAgentService";
 
         String policy_decision = XACMLQueryUtil.getPolicyDecisionForFedlet(
-                                        request,
-                                        spEntityID,
-                                        idpEntityID,
-                                        newNameIDValue,
-                                        serviceName,
-					resource,
-                                        action);
-                                         
+                request,
+                spEntityID,
+                idpEntityID,
+                newNameIDValue,
+                serviceName,
+                resource,
+                action);
+
 %>
 <h2> Fedlet XACML Query Response </h2>
 <table border="2" cellspacing="0" cellpadding="7">
-<tr>
-<th>Resource</th>
-<th>Policy Decision</th>
-</tr>
-<%
-       if(resource!=null) resource = ESAPI.encoder().encodeForHTML(resource);
-       out.println("<tr>");
-       out.println("<td>"); 
-       out.println(resource);
-       out.println("</td>"); 
-       out.println("<td>"); 
-       out.println(policy_decision);
-       out.println("</td>"); 
-%>
+    <tr>
+        <th>Resource</th>
+        <th>Policy Decision</th>
+    </tr>
+    <%
+        if (resource != null) resource = ESAPI.encoder().encodeForHTML(resource);
+        out.println("<tr>");
+        out.println("<td>");
+        out.println(resource);
+        out.println("</td>");
+        out.println("<td>");
+        out.println(policy_decision);
+        out.println("</td>");
+    %>
 </table>
 <%
-   } catch (Exception ex) {
-   SAML2Utils.debug.error("Error sending XACML Query " , ex);
-   }
+    } catch (Exception ex) {
+        SAML2Utils.debug.error("Error sending XACML Query ", ex);
+    }
 %>
 </body>
 </html>

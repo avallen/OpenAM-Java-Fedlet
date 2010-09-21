@@ -44,21 +44,14 @@ java.util.List,
 java.util.Map,
 java.util.HashMap,
 java.util.HashSet,
-java.util.Set"
-%>
-<%@ include file="header.jspf" %>
-<%
-    String deployuri = request.getRequestURI();
-    int slashLoc = deployuri.indexOf("/", 1);
-    if (slashLoc != -1) {
-        deployuri = deployuri.substring(0, slashLoc);
-    }
-%>
+java.util.Set" %>
+<%@ page import="com.hmg.servicecloud.fedlet.util.FedletUtils" %>
+
 <html>
 <head>
     <title>Fedlet Sample Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <link rel="stylesheet" type="text/css" href="<%= deployuri %>/com_sun_web_ui/css/css_ns6up.css" />
+    <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/com_sun_web_ui/css/css_ns6up.css" />
 </head>
 
 <body>
@@ -71,10 +64,10 @@ java.util.Set"
 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="MstTblBot" title="">
 <tbody><tr>
 <td class="MstTdTtl" width="99%">
-<div class="MstDivTtl"><img name="ProdName" src="<%= deployuri %>/console/images/PrimaryProductName.png" alt="" /></div></td><td class="MstTdLogo" width="1%"><img name="RMRealm.mhCommon.BrandLogo" src="<%= deployuri %>/com_sun_web_ui/images/other/javalogo.gif" alt="Java(TM) Logo" border="0" height="55" width="31" /></td></tr></tbody></table>
-<table class="MstTblEnd" border="0" cellpadding="0" cellspacing="0" width="100%"><tbody><tr><td><img name="RMRealm.mhCommon.EndorserLogo" src="<%= deployuri %>/com_sun_web_ui/images/masthead/masthead-sunname.gif" alt="Sun(TM) Microsystems,
-Inc." align="right" border="0" height="10" width="108" /></td></tr></tbody></table></div><div class="SkpMedGry1"><a name="SkipAnchor2089" id="SkipAnchor2089"></a></div>
-<div class="SkpMedGry1"><a href="#SkipAnchor4928"><img src="<%= deployuri %>/com_sun_web_ui/images/other/dot.gif" alt="Jump Over Tab Navigation Area. Current Selection is: Access Control" border="0" height="1" width="1" /></a></div>
+<div class="MstDivTtl"><img name="ProdName" src="<%= request.getContextPath() %>/console/images/PrimaryProductName.png" alt="" /></div></td><td class="MstTdLogo" width="1%"><img name="RMRealm.mhCommon.BrandLogo" src="<%= request.getContextPath() %>/com_sun_web_ui/images/other/javalogo.gif" alt="Java(TM) Logo" border="0" height="55" width="31" /></td></tr></tbody></table>
+<table class="MstTblEnd" border="0" cellpadding="0" cellspacing="0" width="100%"><tbody><tr><td><img name="RMRealm.mhCommon.EndorserLogo" src="<%= request.getContextPath() %>/com_sun_web_ui/images/masthead/masthead-sunname.gif" alt="Sun(TM) Microsystems,
+Inc." align="right" border="0" height="10" width="108" /></td></tr></tbody></table></div><div class="SkpMedGry1"><a id="SkipAnchor2089"></a></div>
+<div class="SkpMedGry1"><a href="#SkipAnchor4928"><img src="<%= request.getContextPath() %>/com_sun_web_ui/images/other/dot.gif" alt="Jump Over Tab Navigation Area. Current Selection is: Access Control" border="0" height="1" width="1" /></a></div>
 <%
     // BEGIN : following code is a must for Fedlet (SP) side application
     Map map;
@@ -188,18 +181,20 @@ Inc." align="right" border="0" height="10" width="108" /></td></tr></tbody></tab
     out.print("<p><p>");
     out.println("<br><b>Test Attribute Query:</b></br>");
     out.print("<p><p>");
-    out.print("<b><a href="+deployuri+"/fedletAttrQuery.jsp?nameIDValue="+value+"&idpEntityID="+entityID+"&spEntityID="+spEntityID+">Fedlet Attribute Query </a></b>");
+    out.print("<b><a href="+ request.getContextPath() +"/fedletAttrQuery.jsp?nameIDValue="+value+"&idpEntityID="+entityID+"&spEntityID="+spEntityID+">Fedlet Attribute Query </a></b>");
     out.print("<p><p>");
 
     out.println("<br><b>Test XACML Policy Decision Query:</b></br>");
     out.print("<p><p>");
-    out.print("<b><a href="+deployuri+"/fedletXACMLQuery.jsp?nameIDValue="+value+"&idpEntityID="+entityID+"&spEntityID="+spEntityID+">Fedlet XACML Query </a></b>");
+    out.print("<b><a href="+ request.getContextPath() +"/fedletXACMLQuery.jsp?nameIDValue="+value+"&idpEntityID="+entityID+"&spEntityID="+spEntityID+">Fedlet XACML Query </a></b>");
     out.print("<p><p>");
 
-    Map idpMap = getIDPBaseUrlAndMetaAlias(entityID, deployuri);
+    FedletUtils fedletUtils = new FedletUtils(application);
+
+    Map idpMap = fedletUtils.getIDPBaseUrlAndMetaAlias(entityID, request.getContextPath());
     String idpBaseUrl = (String) idpMap.get("idpBaseUrl");
     String idpMetaAlias = (String) idpMap.get("idpMetaAlias");
-    String fedletBaseUrl = getFedletBaseUrl(spEntityID, deployuri);
+    String fedletBaseUrl = fedletUtils.getFedletBaseUrl(spEntityID, request.getContextPath());
     out.println("<br><b>Test Single Logout:</b></br>");
     if (idpMetaAlias != null) {
         out.println("<br><b><a href=\"" + idpBaseUrl + "/IDPSloInit?metaAlias=" + idpMetaAlias + "&binding=urn:oasis:names:tc:SAML:2.0:bindings:SOAP&RelayState=" + fedletBaseUrl + "/index.jsp\">Run Identity Provider initiated Single Logout using SOAP binding</a></b></br>");
