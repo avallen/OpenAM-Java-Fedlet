@@ -28,100 +28,38 @@
 
 
 <%@page
-import="com.sun.identity.saml2.common.SAML2Exception,
-com.sun.identity.saml2.common.SAML2Constants,
-com.sun.identity.saml2.assertion.Assertion,
-com.sun.identity.saml2.assertion.Subject,
-com.sun.identity.saml2.profile.SPACSUtils,
-com.sun.identity.saml2.protocol.Response,
-com.sun.identity.saml2.assertion.NameID,
-com.sun.identity.saml.common.SAMLUtils,
-com.sun.identity.shared.encode.URLEncDec,
-com.sun.identity.plugin.session.SessionException,
-java.io.IOException,
-java.util.Iterator,
-java.util.List,
-java.util.Map,
-java.util.HashMap,
-java.util.HashSet,
-java.util.Set" %>
-<%@ page import="com.hmg.servicecloud.fedlet.util.FedletUtils" %>
+        import="com.sun.identity.saml2.assertion.Assertion,
+                com.sun.identity.saml2.assertion.NameID,
+                com.sun.identity.saml2.assertion.Subject,
+                com.sun.identity.saml2.common.SAML2Constants,
+                com.sun.identity.saml2.protocol.Response,
+                com.sun.identity.shared.encode.URLEncDec,
+                java.util.HashSet,
+                java.util.Iterator,
+                java.util.Map,
+                java.util.Set" %>
 
-<html>
-<head>
-    <title>Fedlet Sample Application</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/com_sun_web_ui/css/css_ns6up.css" />
-</head>
+<%@include file="fedletconfig.jsp" %>
+<%@include file="header.jsp" %>
 
-<body>
-<div class="MstDiv"><table width="100%" border="0" cellpadding="0" cellspacing="0" class="MstTblTop" title="">
-<tbody><tr>
-<td nowrap="nowrap">&nbsp;</td>
-<td nowrap="nowrap">&nbsp;</td>
-</tr></tbody></table>
-
-<table width="100%" border="0" cellpadding="0" cellspacing="0" class="MstTblBot" title="">
-<tbody><tr>
-<td class="MstTdTtl" width="99%">
-<div class="MstDivTtl"><img name="ProdName" src="<%= request.getContextPath() %>/console/images/PrimaryProductName.png" alt="" /></div></td><td class="MstTdLogo" width="1%"><img name="RMRealm.mhCommon.BrandLogo" src="<%= request.getContextPath() %>/com_sun_web_ui/images/other/javalogo.gif" alt="Java(TM) Logo" border="0" height="55" width="31" /></td></tr></tbody></table>
-<table class="MstTblEnd" border="0" cellpadding="0" cellspacing="0" width="100%"><tbody><tr><td><img name="RMRealm.mhCommon.EndorserLogo" src="<%= request.getContextPath() %>/com_sun_web_ui/images/masthead/masthead-sunname.gif" alt="Sun(TM) Microsystems,
-Inc." align="right" border="0" height="10" width="108" /></td></tr></tbody></table></div><div class="SkpMedGry1"><a id="SkipAnchor2089"></a></div>
-<div class="SkpMedGry1"><a href="#SkipAnchor4928"><img src="<%= request.getContextPath() %>/com_sun_web_ui/images/other/dot.gif" alt="Jump Over Tab Navigation Area. Current Selection is: Access Control" border="0" height="1" width="1" /></a></div>
 <%
-    // BEGIN : following code is a must for Fedlet (SP) side application
-    Map map;
-    try {
-        // invoke the Fedlet processing logic. this will do all the
-        // necessary processing conforming to SAMLv2 specifications,
-        // such as XML signature validation, Audience and Recipient
-        // validation etc.  
-        map = SPACSUtils.processResponseForFedlet(request, response);
-    } catch (SAML2Exception sme) {
-        SAMLUtils.sendError(request, response,
-            response.SC_INTERNAL_SERVER_ERROR, "failedToProcessSSOResponse",
-            sme.getMessage());
-        return;
-    } catch (IOException ioe) {
-        SAMLUtils.sendError(request, response,
-            response.SC_INTERNAL_SERVER_ERROR, "failedToProcessSSOResponse",
-            ioe.getMessage());
-        return;
-    } catch (SessionException se) {
-        SAMLUtils.sendError(request, response, 
-            response.SC_INTERNAL_SERVER_ERROR, "failedToProcessSSOResponse",
-            se.getMessage());
-        return;
-    } catch (ServletException se) {
-        SAMLUtils.sendError(request, response,
-            response.SC_BAD_REQUEST, "failedToProcessSSOResponse",
-            se.getMessage());
-        return;
-    }
-    // END : code is a must for Fedlet (SP) side application
-    
-    String relayUrl = (String) map.get(SAML2Constants.RELAY_STATE);
-    if ((relayUrl != null) && (relayUrl.length() != 0)) {
-        // something special for validation to send redirect
-        int stringPos  = relayUrl.indexOf("sendRedirectForValidationNow=true");
-        if (stringPos != -1) {
-            response.sendRedirect(relayUrl);
-        }
-    } 
 
     // Following are sample code to show how to retrieve information,
-    // such as Reponse/Assertion/Attributes, from the returned map. 
-    // You might not need them in your real application code. 
-    Response samlResp = (Response) map.get(SAML2Constants.RESPONSE); 
-    Assertion assertion = (Assertion) map.get(SAML2Constants.ASSERTION);
-    Subject subject = (Subject) map.get(SAML2Constants.SUBJECT);
-    String entityID = (String) map.get(SAML2Constants.IDPENTITYID);
-    String spEntityID = (String) map.get(SAML2Constants.SPENTITYID);
-    NameID nameId = (NameID) map.get(SAML2Constants.NAMEID);
+    // such as Reponse/Assertion/Attributes, from the returned map.
+    // You might not need them in your real application code.
+    com.hmg.servicecloud.fedlet.saml.SAMLResponse samlResponse = (com.hmg.servicecloud.fedlet.saml.SAMLResponse) session.getAttribute("SAML_RESPONSE");
+
+    Response samlResp = samlResponse.getResponse();
+    Assertion assertion = samlResponse.getAssertion();
+    Subject responseSubject = samlResponse.getResponseSubject();
+    String responseIDPentityID = samlResponse.getResponseIDPentityID();
+    String responseSPEntityID = samlResponse.getResponseSPEntityID();
+    NameID nameId = samlResponse.getNameId();
     String value = nameId.getValue();
     String format = nameId.getFormat();
-    out.println("<br><br><b>Single Sign-On successful with IDP " 
-        + entityID + ".</b>");
+
+    out.println("<br><br><b>Single Sign-On successful with IDP "
+            + responseIDPentityID + ".</b>");
     out.println("<br><br>");
     out.println("<table border=0>");
     if (format != null) {
@@ -135,16 +73,16 @@ Inc." align="right" border="0" height="10" width="108" /></td></tr></tbody></tab
         out.println("<td valign=top><b>Name ID value: </b></td>");
         out.println("<td>" + value + "</td>");
         out.println("</tr>");
-    }    
-    String sessionIndex = (String) map.get(SAML2Constants.SESSION_INDEX);
+    }
+    String sessionIndex = samlResponse.getSessionIndex();
     if (sessionIndex != null) {
         out.println("<tr>");
         out.println("<td valign=top><b>SessionIndex: </b></td>");
         out.println("<td>" + sessionIndex + "</td>");
         out.println("</tr>");
-    }    
-    
-    Map attrs = (Map) map.get(SAML2Constants.ATTRIBUTE_MAP);
+    }
+
+    Map attrs = samlResponse.getAttributes();
     if (attrs != null) {
         out.println("<tr>");
         out.println("<td valign=top><b>Attributes: </b></td>");
@@ -171,49 +109,38 @@ Inc." align="right" border="0" height="10" width="108" /></td></tr></tbody></tab
     out.println("<span style='display:none;' id=assr><br><textarea rows=40 cols=100>" + assertion.toXMLString(true, true) + "</textarea></span>");
 
     out.println("<br><b><a href=# onclick=toggleDisp('subj')>Click to view Subject XML</a></b><br>");
-    out.println("<span style='display:none;' id=subj><br><textarea rows=10 cols=100>" + subject.toXMLString(true, true) + "</textarea></span>");
-
-    if ((relayUrl != null) && (relayUrl.length() != 0)) {
-        out.println("<br><br>Click <a href=\"" + relayUrl 
-            + "\">here</a> to redirect to final destination.");
-    }
+    out.println("<span style='display:none;' id=subj><br><textarea rows=10 cols=100>" + responseSubject.toXMLString(true, true) + "</textarea></span>");
 
     out.print("<p><p>");
     out.println("<br><b>Test Attribute Query:</b></br>");
     out.print("<p><p>");
-    out.print("<b><a href="+ request.getContextPath() +"/fedletAttrQuery.jsp?nameIDValue="+value+"&idpEntityID="+entityID+"&spEntityID="+spEntityID+">Fedlet Attribute Query </a></b>");
+    out.print("<b><a href=" + request.getContextPath() + "/fedletAttrQuery.jsp?nameIDValue=" + value + "&idpEntityID=" + responseIDPentityID + "&spEntityID=" + responseSPEntityID + ">Fedlet Attribute Query </a></b>");
     out.print("<p><p>");
 
     out.println("<br><b>Test XACML Policy Decision Query:</b></br>");
     out.print("<p><p>");
-    out.print("<b><a href="+ request.getContextPath() +"/fedletXACMLQuery.jsp?nameIDValue="+value+"&idpEntityID="+entityID+"&spEntityID="+spEntityID+">Fedlet XACML Query </a></b>");
+    out.print("<b><a href=" + request.getContextPath() + "/fedletXACMLQuery.jsp?nameIDValue=" + value + "&idpEntityID=" + responseIDPentityID + "&spEntityID=" + responseSPEntityID + ">Fedlet XACML Query </a></b>");
     out.print("<p><p>");
 
-    FedletUtils fedletUtils = new FedletUtils(application);
-
-    Map idpMap = fedletUtils.getIDPBaseUrlAndMetaAlias(entityID, request.getContextPath());
-    String idpBaseUrl = (String) idpMap.get("idpBaseUrl");
-    String idpMetaAlias = (String) idpMap.get("idpMetaAlias");
-    String fedletBaseUrl = fedletUtils.getFedletBaseUrl(spEntityID, request.getContextPath());
     out.println("<br><b>Test Single Logout:</b></br>");
+
     if (idpMetaAlias != null) {
         out.println("<br><b><a href=\"" + idpBaseUrl + "/IDPSloInit?metaAlias=" + idpMetaAlias + "&binding=urn:oasis:names:tc:SAML:2.0:bindings:SOAP&RelayState=" + fedletBaseUrl + "/index.jsp\">Run Identity Provider initiated Single Logout using SOAP binding</a></b></br>");
         out.println("<br><b><a href=\"" + idpBaseUrl + "/IDPSloInit?metaAlias=" + idpMetaAlias + "&binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect&RelayState=" + fedletBaseUrl + "/index.jsp\">Run Identity Provider initiated Single Logout using HTTP Redirect binding</a></b></br>");
         out.println("<br><b><a href=\"" + idpBaseUrl + "/IDPSloInit?metaAlias=" + idpMetaAlias + "&binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST&RelayState=" + fedletBaseUrl + "/index.jsp\">Run Identity Provider initiated Single Logout using HTTP POST binding</a></b></br>");
     }
-    out.println("<br><b><a href=\"" + fedletBaseUrl + "/fedletSloInit?spEntityID=" + URLEncDec.encode(spEntityID) + "&idpEntityID=" + URLEncDec.encode(entityID) + "&NameIDValue=" + URLEncDec.encode(value) + "&SessionIndex=" + URLEncDec.encode(sessionIndex) + "&binding=urn:oasis:names:tc:SAML:2.0:bindings:SOAP&RelayState=" + URLEncDec.encode(fedletBaseUrl + "/index.jsp") + "\">Run Fedlet initiated Single Logout using SOAP binding</a></b></br>");
-    out.println("<br><b><a href=\"" + fedletBaseUrl + "/fedletSloInit?spEntityID=" + URLEncDec.encode(spEntityID) + "&idpEntityID=" + URLEncDec.encode(entityID) + "&NameIDValue=" + URLEncDec.encode(value) + "&SessionIndex=" + URLEncDec.encode(sessionIndex) + "&binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect&RelayState=" + URLEncDec.encode(fedletBaseUrl + "/index.jsp") + "\">Run Fedlet initiated Single Logout using HTTP Redirect binding</a></b></br>");
-    out.println("<br><b><a href=\"" + fedletBaseUrl + "/fedletSloInit?spEntityID=" + URLEncDec.encode(spEntityID) + "&idpEntityID=" + URLEncDec.encode(entityID) + "&NameIDValue=" + URLEncDec.encode(value) + "&SessionIndex=" + URLEncDec.encode(sessionIndex) + "&binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST&RelayState=" + URLEncDec.encode(fedletBaseUrl + "/index.jsp") + "\">Run Fedlet initiated Single Logout using HTTP POST binding</a></b></br>");
+    out.println("<br><b><a href=\"" + fedletBaseUrl + "/fedletSloInit?spEntityID=" + URLEncDec.encode(responseSPEntityID) + "&idpEntityID=" + URLEncDec.encode(responseIDPentityID) + "&NameIDValue=" + URLEncDec.encode(value) + "&SessionIndex=" + URLEncDec.encode(sessionIndex) + "&binding=urn:oasis:names:tc:SAML:2.0:bindings:SOAP&RelayState=" + URLEncDec.encode(fedletBaseUrl + "/index.jsp") + "\">Run Fedlet initiated Single Logout using SOAP binding</a></b></br>");
+    out.println("<br><b><a href=\"" + fedletBaseUrl + "/fedletSloInit?spEntityID=" + URLEncDec.encode(responseSPEntityID) + "&idpEntityID=" + URLEncDec.encode(responseIDPentityID) + "&NameIDValue=" + URLEncDec.encode(value) + "&SessionIndex=" + URLEncDec.encode(sessionIndex) + "&binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect&RelayState=" + URLEncDec.encode(fedletBaseUrl + "/index.jsp") + "\">Run Fedlet initiated Single Logout using HTTP Redirect binding</a></b></br>");
+    out.println("<br><b><a href=\"" + fedletBaseUrl + "/fedletSloInit?spEntityID=" + URLEncDec.encode(responseSPEntityID) + "&idpEntityID=" + URLEncDec.encode(responseIDPentityID) + "&NameIDValue=" + URLEncDec.encode(value) + "&SessionIndex=" + URLEncDec.encode(sessionIndex) + "&binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST&RelayState=" + URLEncDec.encode(fedletBaseUrl + "/index.jsp") + "\">Run Fedlet initiated Single Logout using HTTP POST binding</a></b></br>");
 %>
 <script>
-function toggleDisp(id)
-{
-    var elem = document.getElementById(id);
-    if (elem.style.display == 'none')
-        elem.style.display = '';
-    else
-        elem.style.display = 'none';
-}
+    function toggleDisp(id) {
+        var elem = document.getElementById(id);
+        if (elem.style.display == 'none')
+            elem.style.display = '';
+        else
+            elem.style.display = 'none';
+    }
 </script>
 </body>
 </html>

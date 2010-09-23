@@ -13,7 +13,7 @@
         <AssertionConsumerService isDefault="true" index="0" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
                                   Location="http://localapp.lexware.de:5080/fedlet/fedletapplication"/>
         <AssertionConsumerService index="1" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"
-                                  Location="http://localapp.lexware.de:5080/fedlet/fedletapplication"/>
+                                  Location="http://localapp.lexware.de:5080/fedlet/assertionConsumerService"/>
     </SPSSODescriptor>
     <RoleDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                     xmlns:query="urn:oasis:names:tc:SAML:metadata:ext:query"

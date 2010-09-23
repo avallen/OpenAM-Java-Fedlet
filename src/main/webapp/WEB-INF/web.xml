@@ -30,59 +30,81 @@
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
     <display-name>Fedlet Sample Application</display-name>
+
+    <context-param>
+        <param-name>UserSessionAdapterClass</param-name>
+        <param-value>com.hmg.servicecloud.fedlet.adapter.SimpleUserSessionAdapter</param-value>
+    </context-param>
+
     <distributable/>
 
-    <!-- Add one servlet entry like this per module -->
+    <listener>
+            <listener-class>com.hmg.servicecloud.fedlet.servlet.FedletConfigurationServletContextListener</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>assertionConsumer</servlet-name>
+        <servlet-class>com.hmg.servicecloud.fedlet.servlet.AssertionConsumerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>assertionConsumer</servlet-name>
+        <url-pattern>/assertionConsumerService</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>fedletapplication</servlet-name>
         <jsp-file>/fedletSampleApp.jsp</jsp-file>
     </servlet>
-    <servlet>
-        <servlet-name>fedletSloInit</servlet-name>
-        <jsp-file>/saml2/jsp/spSingleLogoutInit.jsp</jsp-file>
-    </servlet>
-    <servlet>
-        <servlet-name>fedletSloSoap</servlet-name>
-        <servlet-class>com.sun.identity.saml2.servlet.SPSingleLogoutServiceSOAP</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>fedletlogout</servlet-name>
-        <jsp-file>/logout.jsp</jsp-file>
-    </servlet>
-    <servlet>
-        <servlet-name>fedletSloRedirect</servlet-name>
-        <jsp-file>/saml2/jsp/spSingleLogoutRedirect.jsp</jsp-file>
-    </servlet>
-    <servlet>
-        <servlet-name>fedletSloPOST</servlet-name>
-        <jsp-file>/saml2/jsp/spSingleLogoutPOST.jsp</jsp-file>
-    </servlet>
-
-    <!-- Add one servlet mapping entry like this per module -->
     <servlet-mapping>
         <servlet-name>fedletapplication</servlet-name>
         <url-pattern>/fedletapplication</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>fedletSloInit</servlet-name>
+        <jsp-file>/saml2/jsp/spSingleLogoutInit.jsp</jsp-file>
+    </servlet>
     <servlet-mapping>
         <servlet-name>fedletSloInit</servlet-name>
         <url-pattern>/fedletSloInit</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>fedletSloSoap</servlet-name>
+        <servlet-class>com.sun.identity.saml2.servlet.SPSingleLogoutServiceSOAP</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>fedletSloSoap</servlet-name>
         <url-pattern>/fedletSloSoap</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>fedletlogout</servlet-name>
+        <jsp-file>/logout.jsp</jsp-file>
+    </servlet>
     <servlet-mapping>
         <servlet-name>fedletlogout</servlet-name>
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>fedletSloPOST</servlet-name>
-        <url-pattern>/fedletSloPOST</url-pattern>
-    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>fedletSloRedirect</servlet-name>
+        <jsp-file>/saml2/jsp/spSingleLogoutRedirect.jsp</jsp-file>
+    </servlet>
     <servlet-mapping>
         <servlet-name>fedletSloRedirect</servlet-name>
         <url-pattern>/fedletSloRedirect</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>fedletSloPOST</servlet-name>
+        <jsp-file>/saml2/jsp/spSingleLogoutPOST.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>fedletSloPOST</servlet-name>
+        <url-pattern>/fedletSloPOST</url-pattern>
+    </servlet-mapping>
+
     
     <welcome-file-list>
          <welcome-file>index.jsp</welcome-file>

@@ -1,10 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<artifactId>maven-defs</artifactId>
-		<groupId>com.hmg.servicecloud</groupId>
-		<version>1.0.0-SNAPSHOT</version>
-	</parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.hmg.servicecloud</groupId>
     <artifactId>hmg_fedlet</artifactId>
@@ -14,6 +9,15 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
@@ -26,6 +30,7 @@
                             <maxIdleTime>60000</maxIdleTime>
                         </connector>
                     </connectors>
+                    <reload>manual</reload>
                 </configuration>
             </plugin>
         </plugins>
@@ -43,26 +48,26 @@
             <version>1.4.1</version>
         </dependency>
 
-		<dependency>
-			<groupId>com.forgerock.openam</groupId>
-			<artifactId>opensso-sharedlib</artifactId>
-			<version>20100913</version>
-		</dependency>
-		<dependency>
-			<groupId>com.forgerock.openam</groupId>
-			<artifactId>openfedlib</artifactId>
-			<version>20100913</version>
-		</dependency>
-		<dependency>
-			<groupId>com.forgerock.openam</groupId>
-			<artifactId>idpdiscovery</artifactId>
-			<version>20100913</version>
-		</dependency>
-		<dependency>
-			<groupId>com.forgerock.openam</groupId>
-			<artifactId>esapiport</artifactId>
-			<version>20100913</version>
-		</dependency>
+        <dependency>
+            <groupId>com.forgerock.openam</groupId>
+            <artifactId>opensso-sharedlib</artifactId>
+            <version>20100913</version>
+        </dependency>
+        <dependency>
+            <groupId>com.forgerock.openam</groupId>
+            <artifactId>openfedlib</artifactId>
+            <version>20100913</version>
+        </dependency>
+        <dependency>
+            <groupId>com.forgerock.openam</groupId>
+            <artifactId>idpdiscovery</artifactId>
+            <version>20100913</version>
+        </dependency>
+        <dependency>
+            <groupId>com.forgerock.openam</groupId>
+            <artifactId>esapiport</artifactId>
+            <version>20100913</version>
+        </dependency>
 
         <!--  The following dependencies either do not exist in a public
          maven repository, or it's not clear which version is included in the

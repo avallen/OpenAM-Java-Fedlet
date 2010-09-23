@@ -56,7 +56,7 @@
             <Value>com.sun.identity.saml2.plugins.DefaultSPAuthnContextMapper</Value>
         </Attribute>
         <Attribute name="spAuthncontextClassrefMapping">
-            <Value>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport|0|default</Value>
+            <Value>urn:oasis:names:tc:SAML:2.0:ac:classes:Password|0|default</Value>
         </Attribute>
         <Attribute name="spAuthncontextComparisonType">
            <Value>exact</Value>
@@ -70,11 +70,12 @@
        <Attribute name="localAuthURL">
            <Value></Value>
        </Attribute>
+       <!-- This is a URL that should always to be redirected to after response processing. -->
        <Attribute name="intermediateUrl">
            <Value></Value>
        </Attribute>
        <Attribute name="defaultRelayState">
-           <Value></Value>
+           <Value>http://localapp.lexware.de:5080/fedlet/fedletapplication</Value>
        </Attribute>
        <Attribute name="appLogoutUrl">
            <Value>http://localapp.lexware.de:5080/fedlet/logout</Value>

@@ -12,11 +12,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * @author Andreas Vallen
  */
-public class FedletMetaData {
+public class FedletConfiguration {
+
+    private static Logger log = Logger.getLogger(FedletConfiguration.class.getName());
 
     private String spEntityId;
     private String spMetaAlias;
@@ -26,6 +29,7 @@ public class FedletMetaData {
     private String idpBaseUrl;
     public static SAML2MetaManager saml2MetaManager;
 
+
     static {
         try {
             saml2MetaManager = new SAML2MetaManager();
@@ -34,7 +38,7 @@ public class FedletMetaData {
         }
     }
 
-    private FedletMetaData(String spEntityId, String spMetaAlias, String spBaseUrl, String idpEntityId, String idpMetaAlias, String idpBaseUrl) throws SAML2MetaException {
+    private FedletConfiguration(String spEntityId, String spMetaAlias, String spBaseUrl, String idpEntityId, String idpMetaAlias, String idpBaseUrl) throws SAML2MetaException {
         this.spEntityId = spEntityId;
         this.spMetaAlias = spMetaAlias;
         this.spBaseUrl = spBaseUrl;
@@ -43,7 +47,7 @@ public class FedletMetaData {
         this.idpBaseUrl = idpBaseUrl;
     }
 
-    public static synchronized FedletMetaData createFromMetaData(ServletContext context) throws SAML2MetaException {
+    public static synchronized FedletConfiguration createFromMetaData(ServletContext context) throws SAML2MetaException {
 
         String spEntityId, spMetaAlias;
 
@@ -69,7 +73,10 @@ public class FedletMetaData {
         String idpBaseUrl = parseIDPBaseURLFromMetadata(idpEntityId);
         String spBaseUrl = parseSPBaseURLFromMetadata(spEntityId, context.getContextPath());
 
-        return new FedletMetaData(spEntityId, spMetaAlias, spBaseUrl, idpEntityId, idpMetaAlias, idpBaseUrl);
+        final FedletConfiguration fedletConfiguration = new FedletConfiguration(spEntityId, spMetaAlias, spBaseUrl, idpEntityId, idpMetaAlias, idpBaseUrl);
+        log.info("Loaded fedletConfiguration: " + fedletConfiguration.toString());
+
+        return fedletConfiguration;
     }
 
     private static String getConfiguredIDPEntityID(String spEntityId) throws SAML2MetaException {
@@ -202,6 +209,18 @@ public class FedletMetaData {
 
     public String getIdpBaseUrl() {
         return idpBaseUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "FedletConfiguration{" +
+                "spEntityId='" + spEntityId + '\'' +
+                ", spMetaAlias='" + spMetaAlias + '\'' +
+                ", spBaseUrl='" + spBaseUrl + '\'' +
+                ", idpEntityId='" + idpEntityId + '\'' +
+                ", idpMetaAlias='" + idpMetaAlias + '\'' +
+                ", idpBaseUrl='" + idpBaseUrl + '\'' +
+                '}';
     }
 }
 
