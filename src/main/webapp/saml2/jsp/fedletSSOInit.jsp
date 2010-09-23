@@ -27,21 +27,17 @@
 --%>
 
 
-
-
-<%@ page import="com.sun.identity.shared.debug.Debug" %>
 <%@ page import="com.sun.identity.saml.common.SAMLUtils" %>
 <%@ page import="com.sun.identity.saml2.common.SAML2Constants" %>
-<%@ page import="com.sun.identity.saml2.common.SAML2Utils" %>
 <%@ page import="com.sun.identity.saml2.common.SAML2Exception" %>
+<%@ page import="com.sun.identity.saml2.common.SAML2Utils" %>
 <%@ page import="com.sun.identity.saml2.meta.SAML2MetaManager" %>
 <%@ page import="com.sun.identity.saml2.profile.SPCache" %>
-<%@ page import="com.sun.identity.saml2.profile.SPSSOFederate" %>
-<%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="java.util.StringTokenizer" %>
+
+<%@ include file="../../fedletconfig.jsp" %>
 
 <%--
     fedletSSOInit.jsp initiates the Single Sign-On at the Service Provider.
@@ -150,102 +146,19 @@
     // metaAlias - Service Provider Entity Id
     // idpEntityID - Identity Provider Identifier
     // Query parameters supported will be documented.
-    String idpEntityID = null;
-    String metaAlias= null;
-    Map paramsMap = null;
     try {
-    String reqID = request.getParameter("requestID");
-    if (reqID != null) {
-       //get the preferred idp
-       idpEntityID = SAML2Utils.getPreferredIDP(request);
-       paramsMap = (Map)SPCache.reqParamHash.get(reqID);
-       metaAlias = (String) paramsMap.get("metaAlias");
-       SPCache.reqParamHash.remove(reqID);
-    } else {
-        // this is an original request check
-        // get the metaAlias ,idpEntityID
-        // if idpEntityID is null redirect to IDP Discovery
-        // Service to retrieve.
-        metaAlias = request.getParameter("metaAlias");
-        if ((metaAlias ==  null) || (metaAlias.length() == 0)) {
-            SAML2MetaManager manager = new SAML2MetaManager();
-            List spMetaAliases = 
-                manager.getAllHostedServiceProviderMetaAliases("/");
-            if ((spMetaAliases != null) && !spMetaAliases.isEmpty()) {
-                // get first one
-                metaAlias = (String) spMetaAliases.get(0);
-            }
-            if ((metaAlias ==  null) || (metaAlias.length() == 0)) {
-                SAMLUtils.sendError(request, response,
-                   response.SC_BAD_REQUEST, "nullSPEntityID",
-                   SAML2Utils.bundle.getString("nullSPEntityID"));
-                return;
-            }
-        }
-
-        idpEntityID = request.getParameter("idpEntityID");
-        paramsMap = SAML2Utils.getParamsMap(request);
-        // always use transient
-        List list = new ArrayList();
-        list.add(SAML2Constants.NAMEID_TRANSIENT_FORMAT);
-        paramsMap.put(SAML2Constants.NAMEID_POLICY_FORMAT, list);
-        if (paramsMap.get(SAML2Constants.BINDING) == null) {
-            // use POST binding
-            list = new ArrayList();
-            list.add(SAML2Constants.HTTP_POST);
-            paramsMap.put(SAML2Constants.BINDING, list);
-        } 
-
-        if ((idpEntityID == null) || (idpEntityID.length() == 0)) {
-            // get reader url
-            String readerURL = SAML2Utils.getReaderURL(metaAlias);
-            if (readerURL != null) {
-                String rID = SAML2Utils.generateID();
-                String redirectURL =
-                    SAML2Utils.getRedirectURL(readerURL,rID,request);
-                if (redirectURL != null) {
-                    paramsMap.put("metaAlias",metaAlias);
-                    SPCache.reqParamHash.put(rID,paramsMap);
-                    response.sendRedirect(redirectURL);
-                    return;
-                }
-            }
-        }
-    }
-
-    if ((idpEntityID == null) || (idpEntityID.length() == 0)) {
-        SAML2MetaManager manager = new SAML2MetaManager();
-        List idpEntities = manager.getAllRemoteIdentityProviderEntities("/"); 
-        if ((idpEntities == null) || idpEntities.isEmpty()) {
-            SAMLUtils.sendError(request, response,
-               response.SC_BAD_REQUEST, "idpNotFound",
-               SAML2Utils.bundle.getString("idpNotFound"));
-            return;
-        } else if (idpEntities.size() == 1) {
-            // only one IDP, just use it
-            idpEntityID = (String) idpEntities.get(0);
-        } else { 
-            // multiple IDP configured in fedlet
-            SAMLUtils.sendError(request, response,
-               response.SC_BAD_REQUEST, "nullIDPEntityID",
-               SAML2Utils.bundle.getString("nullIDPEntityID"));
-            return;
-        }
-    }
-    // get the parameters and put it in a map.
-    SPSSOFederate.initiateAuthnRequest(request,response,metaAlias,
-        idpEntityID, paramsMap);
+        samlRequestSender.sendAuthnRequest(request, response);
     } catch (SAML2Exception sse) {
-        SAML2Utils.debug.error("Error sending AuthnRequest " , sse);
+        SAML2Utils.debug.error("Error sending AuthnRequest ", sse);
         SAMLUtils.sendError(request, response,
-            response.SC_BAD_REQUEST, "requestProcessingError", 
-            SAML2Utils.bundle.getString("requestProcessingError") + " " +
-            sse.getMessage());
+                response.SC_BAD_REQUEST, "requestProcessingError",
+                SAML2Utils.bundle.getString("requestProcessingError") + " " +
+                        sse.getMessage());
     } catch (Exception e) {
-        SAML2Utils.debug.error("Error processing Request ",e);
+        SAML2Utils.debug.error("Error processing Request ", e);
         SAMLUtils.sendError(request, response,
-            response.SC_BAD_REQUEST, "requestProcessingError",
-            SAML2Utils.bundle.getString("requestProcessingError") + " " +
-            e.getMessage());
+                response.SC_BAD_REQUEST, "requestProcessingError",
+                SAML2Utils.bundle.getString("requestProcessingError") + " " +
+                        e.getMessage());
     }
 %>

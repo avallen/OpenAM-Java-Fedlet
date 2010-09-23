@@ -129,6 +129,12 @@
                 href="<%= fedletBaseUrl %>/saml2/jsp/fedletSSOInit.jsp?metaAlias=<%= spMetaAlias %>&idpEntityID=<%= idpEntityID %>&binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact">Run
             Fedlet (SP) initiated Single Sign-On using HTTP Artifact binding</a></td>
     </tr>
+    <tr>
+        <td colspan="2"><a
+                href="<%= fedletBaseUrl %>/saml2/jsp/fedletSSOInit.jsp?binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST&IsPassive=true">Run
+            Fedlet (SP) initiated <b><i>passive</i></b>Single Sign-On using HTTP POST binding</a></td>
+    </tr>
+
     <%
         if ((idpMetaAlias != null) && (idpMetaAlias.length() != 0)) {
             //remote IDP is also FAM, show IDP initiated SSO
