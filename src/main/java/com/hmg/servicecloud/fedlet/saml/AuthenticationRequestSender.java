@@ -7,10 +7,7 @@ import com.sun.identity.saml2.profile.SPSSOFederate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 import static com.sun.identity.saml2.common.SAML2Constants.*;
@@ -121,29 +118,39 @@ public class AuthenticationRequestSender {
     private FedletConfiguration fedletConfiguration;
     private HashMap<String, List<String>> configuredParamsMap;
 
+    public AuthenticationRequestSender(FedletConfiguration fedletConfiguration, Map<String,List<String>> paramMap) {
+        this(fedletConfiguration);
+        this.configuredParamsMap.putAll(paramMap);
+    }
+
     public AuthenticationRequestSender(FedletConfiguration fedletConfiguration) {
         this.fedletConfiguration = fedletConfiguration;
         this.configuredParamsMap = new HashMap<String, List<String>>();
+
+        // Some defaults:
         configuredParamsMap.put(NAMEID_POLICY_FORMAT, Collections.singletonList(NAMEID_TRANSIENT_FORMAT));
-        configuredParamsMap.put(REQ_BINDING, Collections.singletonList(HTTP_POST));
+        configuredParamsMap.put(REQ_BINDING, Collections.singletonList(HTTP_REDIRECT));
     }
 
     public void send(HttpServletRequest request, HttpServletResponse response) throws SAML2Exception {
+        send(request, response);
+    }
+
+    public void send(HttpServletRequest request, HttpServletResponse response, Map<String,List<String>> authnRequestParams) throws SAML2Exception {
         Map<String, List> requestParamsMap = SAML2Utils.getParamsMap(request);
-        // overwrite with configured parameters:
+
+        // overwrite with parameters configured for this instance:
         requestParamsMap.putAll(this.configuredParamsMap);
+
+        // overwrite again with parameters passed in method invocation:
+        requestParamsMap.putAll(authnRequestParams);
 
         logger.info("Sending Authentication request to IPD " + fedletConfiguration.getIdpEntityId() +
                 " with the following parameters: " + requestParamsMap);
         SPSSOFederate.initiateAuthnRequest(request, response, fedletConfiguration.getSpMetaAlias(),
                 fedletConfiguration.getIdpEntityId(), requestParamsMap);
+
+
     }
 
-    public void setIsPassive(boolean isPassive) {
-        if (isPassive) {
-            configuredParamsMap.put(ISPASSIVE, Collections.singletonList(TRUE));
-        } else {
-            configuredParamsMap.remove(ISPASSIVE);
-        }
-    }
 }

@@ -32,6 +32,13 @@
             <Value>anonymous</Value>
         </Attribute>
         <Attribute name="spAdapter">
+            <Value>com.hmg.servicecloud.fedlet.adapter.FedletServiceProviderAdapter</Value>
+        </Attribute>
+        <Attribute name="spAdapterEnv">
+            <Value>var=value</Value>
+            <Value>var2=value</Value>
+        </Attribute>
+        <Attribute name="spAdapter">
             <Value></Value>
         </Attribute>
         <Attribute name="spAdapterEnv">

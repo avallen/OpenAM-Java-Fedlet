@@ -47,6 +47,17 @@ public class AssertionConsumerServlet extends javax.servlet.http.HttpServlet {
         try {
             samlResponse = SAMLResponseProcessor.processRequest(request, response);
         } catch (SAML2Exception e) {
+
+            // Some error processing is done already, for example by our own FedletServiceProviderAdapter
+            // failure handlers. In the process a redirect might already have been performed. In this
+            // case there remains nothing to be done here, in fact it is not possible anymore
+            // to write to the response, because it has already been redirected.
+            if (e.isRedirectionDone()) {
+                return;
+            }
+
+            // else send a generic error response.
+            // TODO: maybe we will need to handle some more cases here?
             SAMLUtils.sendError(request, response,
                     response.SC_INTERNAL_SERVER_ERROR, "failedToProcessSSOResponse",
                     e.getMessage());

@@ -36,6 +36,15 @@
         <param-value>com.hmg.servicecloud.fedlet.adapter.SimpleUserSessionAdapter</param-value>
     </context-param>
 
+    <filter>
+        <filter-name>SessionCheckFilter</filter-name>
+        <filter-class>com.hmg.servicecloud.fedlet.servlet.SAMLSessionCheckFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>SessionCheckFilter</filter-name>
+        <url-pattern>/sessionCheck.jsp</url-pattern>
+    </filter-mapping>
     <distributable/>
 
     <listener>
