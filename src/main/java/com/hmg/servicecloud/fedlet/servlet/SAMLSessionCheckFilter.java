@@ -42,7 +42,7 @@ public class SAMLSessionCheckFilter implements Filter {
 
             final String requestURL = HttpUtils.getRequestURL((HttpServletRequest) req).toString();
             session.setAttribute("FEDLET_RETURN_TO_URL", requestURL);
-            updateTimeOfLastIsPassiveRequest(session);
+            updateTimeOfLastSessionCheck(session);
             try {
                 samlSender.sendPassiveAuthnRequestReturnTo((HttpServletRequest) req, (HttpServletResponse) resp, requestURL);
             } catch (SAML2Exception e) {
@@ -67,7 +67,7 @@ public class SAMLSessionCheckFilter implements Filter {
         }
     }
 
-    private void updateTimeOfLastIsPassiveRequest(HttpSession session) {
+    private void updateTimeOfLastSessionCheck(HttpSession session) {
         Long lastSessionCheckTimeUnixSeconds = new Date().getTime() / 1000L;
         session.setAttribute(LAST_SESSIONCHECK, lastSessionCheckTimeUnixSeconds);
     }

@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>Validate Fedlet Setup</title>
+    <title>OpenAM Fedlet</title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/com_sun_web_ui/css/css_ns6up.css"/>
 </head>

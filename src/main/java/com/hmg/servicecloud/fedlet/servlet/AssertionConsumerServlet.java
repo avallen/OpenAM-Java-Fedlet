@@ -41,7 +41,7 @@ public class AssertionConsumerServlet extends javax.servlet.http.HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         SAMLResponse samlResponse;
         try {
@@ -53,15 +53,22 @@ public class AssertionConsumerServlet extends javax.servlet.http.HttpServlet {
             // case there remains nothing to be done here, in fact it is not possible anymore
             // to write to the response, because it has already been redirected.
             if (e.isRedirectionDone()) {
+                logger.info("The validation of the SAML response failed. A redirect has already been" +
+                        "performed by the validation code.");
                 return;
             }
 
-            // else send a generic error response.
+            // TODO: how to do error handling?
             // TODO: maybe we will need to handle some more cases here?
-            SAMLUtils.sendError(request, response,
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Some error occured during processing, see stdout.");
+            return;
+
+            /* This would Forward to the saml2error.jsp ??
+              SAMLUtils.sendError(request, response,
                     response.SC_INTERNAL_SERVER_ERROR, "failedToProcessSSOResponse",
                     e.getMessage());
-            return;
+                    */
         }
 
         userSessionAdapter.createUserSessionFromValidatedSAMLResponse(request, samlResponse);
@@ -83,7 +90,7 @@ public class AssertionConsumerServlet extends javax.servlet.http.HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.doGet(req, resp);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doPost(req, resp);
     }
 }

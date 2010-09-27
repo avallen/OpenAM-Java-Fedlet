@@ -11,11 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * @author Andreas Vallen
  */
 public class FedletServiceProviderAdapter extends SAML2ServiceProviderAdapter {
+
+     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     /**
      * this method allows the configuration of the adapter from parameters configured
@@ -37,6 +40,8 @@ public class FedletServiceProviderAdapter extends SAML2ServiceProviderAdapter {
         StatusCode subStatusCode = statusCode.getStatusCode();
         String subStatusCodeValue = subStatusCode != null ? subStatusCode.getValue() : "";
 
+        logger.info("SAML Single Sign On request failed with with StatusCode " + statusCodeValue);
+
         // This is how it should be once OpenSSO returns the correct Status code:
         //  if (statusCodeValue.equals(SAML2Constants.RESPONDER) && subStatusCodeValue.equals(SAML2Constants.NO_PASSIVE)) {
 
@@ -46,13 +51,17 @@ public class FedletServiceProviderAdapter extends SAML2ServiceProviderAdapter {
 
         final String returnToUrl = (String) session.getAttribute("FEDLET_RETURN_TO_URL");
         if (returnToUrl != null) {
+            logger.info("The session attribute FEDLET_RETURN_TO_URL is set, performing a redirect to this URL: "
+                    + returnToUrl);
             try {
                 response.sendRedirect(returnToUrl);
             } catch (IOException e) {
             }
             return true; // in any case, if the redirect fails there has possibly already been another redirection.
+        } else {
+            logger.info("Did not find a FEDLET_RETURN_TO_URL that could be used to redirect to after the error.");
+            return false;
         }
-        return false;
     }
 
 }
