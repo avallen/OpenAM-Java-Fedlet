@@ -134,6 +134,10 @@
                 href="<%= fedletBaseUrl %>/saml2/jsp/fedletSSOInit.jsp?binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST&IsPassive=true">Run
             Fedlet (SP) initiated <b><i>passive</i></b>Single Sign-On using HTTP POST binding</a></td>
     </tr>
+    <tr>
+        <td colspan="2"><a
+                href="<%= fedletBaseUrl %>/sessionCheck.jsp">Access a page configured with the SessionCheck filter.</a></td>
+    </tr>
 
     <%
         if ((idpMetaAlias != null) && (idpMetaAlias.length() != 0)) {

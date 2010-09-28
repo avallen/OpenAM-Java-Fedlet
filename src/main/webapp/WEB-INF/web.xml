@@ -39,6 +39,10 @@
     <filter>
         <filter-name>SessionCheckFilter</filter-name>
         <filter-class>com.hmg.servicecloud.fedlet.servlet.SAMLSessionCheckFilter</filter-class>
+        <init-param>
+            <param-name>sessionCheckIntervalSeconds</param-name>
+            <param-value>15</param-value>
+        </init-param>
     </filter>
 
     <filter-mapping>
@@ -59,6 +63,8 @@
         <servlet-name>assertionConsumer</servlet-name>
         <url-pattern>/assertionConsumerService</url-pattern>
     </servlet-mapping>
+
+
 
     <servlet>
         <servlet-name>fedletapplication</servlet-name>
@@ -114,6 +120,14 @@
         <url-pattern>/fedletSloPOST</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>exportmetadata</servlet-name>
+        <servlet-class>com.hmg.servicecloud.fedlet.servlet.ExportMetadataServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>exportmetadata</servlet-name>
+        <url-pattern>/exportmetadata</url-pattern>
+    </servlet-mapping>
     
     <welcome-file-list>
          <welcome-file>index.jsp</welcome-file>

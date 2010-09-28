@@ -32,11 +32,10 @@
             <Value>anonymous</Value>
         </Attribute>
         <Attribute name="spAdapter">
-            <Value>com.hmg.servicecloud.fedlet.adapter.FedletServiceProviderAdapter</Value>
+            <Value>com.hmg.servicecloud.fedlet.adapter.HMGSPAdapter</Value>
         </Attribute>
         <Attribute name="spAdapterEnv">
-            <Value>var=value</Value>
-            <Value>var2=value</Value>
+            <Value>defaultReturnToURLOnErrorResponse=http://localapp.lexware.de:5080/fedlet/sessionCheck.jsp</Value>
         </Attribute>
         <Attribute name="spAdapter">
             <Value></Value>

@@ -1,0 +1,24 @@
+<EntityDescriptor entityID="http://localapp.lexware.de:5080/fedlet" xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+    <SPSSODescriptor AuthnRequestsSigned="false" WantAssertionsSigned="false"
+                     protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                             Location="http://localapp.lexware.de:5080/fedlet/fedletSloRedirect"
+                             ResponseLocation="http://localapp.lexware.de:5080/fedlet/fedletSloRedirect"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                             Location="http://localapp.lexware.de:5080/fedlet/fedletSloPOST"
+                             ResponseLocation="http://localapp.lexware.de:5080/fedlet/fedletSloPOST"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
+                             Location="http://localapp.lexware.de:5080/fedlet/fedletSloSoap"/>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+        <AssertionConsumerService isDefault="true" index="0" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                  Location="http://localapp.lexware.de:5080/fedlet/fedletapplication"/>
+        <AssertionConsumerService index="1" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"
+                                  Location="http://localapp.lexware.de:5080/fedlet/assertionConsumerService"/>
+    </SPSSODescriptor>
+    <RoleDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xmlns:query="urn:oasis:names:tc:SAML:metadata:ext:query"
+                    xsi:type="query:AttributeQueryDescriptorType"
+                    protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol"></RoleDescriptor>
+    <XACMLAuthzDecisionQueryDescriptor WantAssertionsSigned="false"
+                                       protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol"></XACMLAuthzDecisionQueryDescriptor>
+</EntityDescriptor>

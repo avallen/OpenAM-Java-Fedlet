@@ -28,7 +28,8 @@
 
 
 <%@page
-        import="com.sun.identity.saml2.assertion.Assertion,
+        import="com.hmg.servicecloud.fedlet.saml.SAMLResponse,
+                com.sun.identity.saml2.assertion.Assertion,
                 com.sun.identity.saml2.assertion.NameID,
                 com.sun.identity.saml2.assertion.Subject,
                 com.sun.identity.saml2.common.SAML2Constants,
@@ -47,7 +48,7 @@
     // Following are sample code to show how to retrieve information,
     // such as Reponse/Assertion/Attributes, from the returned map.
     // You might not need them in your real application code.
-    com.hmg.servicecloud.fedlet.saml.SAMLResponse samlResponse = (com.hmg.servicecloud.fedlet.saml.SAMLResponse) session.getAttribute("SAML_RESPONSE");
+    SAMLResponse samlResponse = (SAMLResponse) session.getAttribute("SAML_RESPONSE");
 
     Response samlResp = samlResponse.getResponse();
     Assertion assertion = samlResponse.getAssertion();

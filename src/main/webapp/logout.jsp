@@ -24,7 +24,8 @@
 
    $Id: logout.jsp,v 1.2 2009/06/17 03:07:37 exu Exp $
 
---%><%@ page language="java"
+--%>
+<%@ page language="java"
         import="com.sun.identity.saml2.common.SAML2Utils,
 java.util.Enumeration"
 %><%

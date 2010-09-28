@@ -58,17 +58,15 @@ public class AssertionConsumerServlet extends javax.servlet.http.HttpServlet {
                 return;
             }
 
-            // TODO: how to do error handling?
-            // TODO: maybe we will need to handle some more cases here?
+            logger.warning("Some error occured during processing, see stdout. " +
+                    "TODO: if this is an error that must be handled, then add the corresponding logic to AssertionConsumerServlet.");
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Some error occured during processing, see stdout.");
-            return;
 
-            /* This would Forward to the saml2error.jsp ??
-              SAMLUtils.sendError(request, response,
-                    response.SC_INTERNAL_SERVER_ERROR, "failedToProcessSSOResponse",
-                    e.getMessage());
-                    */
+            SAMLUtils.sendError(request, response,
+                  response.SC_INTERNAL_SERVER_ERROR, "failedToProcessSSOResponse",
+                  e.getMessage());
+
+            return;
         }
 
         userSessionAdapter.createUserSessionFromValidatedSAMLResponse(request, samlResponse);
@@ -84,7 +82,7 @@ public class AssertionConsumerServlet extends javax.servlet.http.HttpServlet {
             return;
         }
 
-        logger.info("SAML resonse contains relayState, will redirect to its value: " + relayUrl);
+        logger.info("SAML response contains relayState, will redirect to its value: " + relayUrl);
         response.sendRedirect(relayUrl);
         return;
     }

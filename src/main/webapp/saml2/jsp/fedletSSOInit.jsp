@@ -141,11 +141,6 @@
 
 --%>
 <%
-    // Retreive the Request Query Parameters
-    // metaAlias and idpEntiyID are the required query parameters
-    // metaAlias - Service Provider Entity Id
-    // idpEntityID - Identity Provider Identifier
-    // Query parameters supported will be documented.
     try {
         samlRequestSender.sendAuthnRequest(request, response);
     } catch (SAML2Exception sse) {

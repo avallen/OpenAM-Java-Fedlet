@@ -1,6 +1,7 @@
 package com.hmg.servicecloud.fedlet.servlet;
 
 import com.hmg.servicecloud.fedlet.saml.SAMLRequestSender;
+import com.hmg.servicecloud.fedlet.util.FedletConstants;
 import com.sun.identity.saml2.common.SAML2Exception;
 
 import javax.servlet.*;
@@ -17,8 +18,9 @@ import java.util.Date;
  */
 public class SAMLSessionCheckFilter implements Filter {
 
-    private static final String LAST_SESSIONCHECK = "LAST_SESSIONCHECK";
+    public static final String LAST_SESSIONCHECK = "LAST_SESSIONCHECK";
     public SAMLRequestSender samlSender;
+    private int sessionCheckIntervalSeconds;
 
     public void init(FilterConfig config) throws ServletException {
         samlSender = (SAMLRequestSender) config.getServletContext().getAttribute("samlSender");
@@ -26,6 +28,12 @@ public class SAMLSessionCheckFilter implements Filter {
             throw new ServletException("Unable to find a SAMLRequestSender object in the Servlet context, " +
                     "please make sure to configure the FedletConfigurationServletContextListener class " +
                     "in your web.xml or initialize this object manually.");
+        }
+        String sessionCheckIntervalString = (String) config.getInitParameter("sessionCheckIntervalSeconds");
+        if (sessionCheckIntervalString != null) {
+            this.sessionCheckIntervalSeconds = Integer.parseInt(sessionCheckIntervalString);
+        } else {
+            this.sessionCheckIntervalSeconds = 600;
         }
     }
 
@@ -38,10 +46,10 @@ public class SAMLSessionCheckFilter implements Filter {
         final HttpSession session = ((HttpServletRequest) req).getSession();
         long secondsSincelastSessionCheck = getTimeSinceLastSessionCheck(session);
 
-        if (secondsSincelastSessionCheck > 60) {
+        if (secondsSincelastSessionCheck > this.sessionCheckIntervalSeconds) {
 
             final String requestURL = HttpUtils.getRequestURL((HttpServletRequest) req).toString();
-            session.setAttribute("FEDLET_RETURN_TO_URL", requestURL);
+            session.setAttribute(FedletConstants.FEDLET_RETURN_TO_URL, requestURL);
             updateTimeOfLastSessionCheck(session);
             try {
                 samlSender.sendPassiveAuthnRequestReturnTo((HttpServletRequest) req, (HttpServletResponse) resp, requestURL);

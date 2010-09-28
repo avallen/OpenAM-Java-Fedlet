@@ -26,16 +26,16 @@
 
 --%>
 <%@page
-        import="com.sun.identity.saml2.assertion.Assertion,
+        import="com.hmg.servicecloud.fedlet.servlet.SAMLSessionCheckFilter,
+                com.hmg.servicecloud.fedlet.saml.SAMLResponse,
+                com.sun.identity.saml2.assertion.Assertion,
                 com.sun.identity.saml2.assertion.NameID,
                 com.sun.identity.saml2.assertion.Subject,
                 com.sun.identity.saml2.common.SAML2Constants,
                 com.sun.identity.saml2.protocol.Response,
-                com.sun.identity.shared.encode.URLEncDec,
-                java.util.HashSet,
-                java.util.Iterator,
-                java.util.Map,
-                java.util.Set" %>
+                com.sun.identity.shared.encode.URLEncDec" %>
+<%@ page import="java.util.*" %>
+<%@ page import="com.hmg.servicecloud.fedlet.servlet.SAMLSessionCheckFilter" %>
 
 <%@include file="fedletconfig.jsp" %>
 <%@include file="header.jsp" %>
@@ -43,14 +43,31 @@
 
 <h2>Page protected with the session check filter</h2>
 
-Accessing this page shall trigger the session check filter.
+This page is configured to execute the SessionCheckFilter on each access.
+<p/>
+The filter triggers a passive Authentication Request if one hasn't been issued for more than one minute.
+<p/>
+
+<%
+    Long lastSessionCheckTimeUnixSeconds = (Long) session.getAttribute(SAMLSessionCheckFilter.LAST_SESSIONCHECK);
+    long currentTimeUnixEpochSeconds = new Date().getTime() / 1000L;
+    long secondsSinceLastCheck = -1;
+    if (lastSessionCheckTimeUnixSeconds != null) {
+        secondsSinceLastCheck = currentTimeUnixEpochSeconds - lastSessionCheckTimeUnixSeconds;
+    }
+    %>
+Seconds since last Session check: <%= secondsSinceLastCheck %>
 
 <%
 
     // Following are sample code to show how to retrieve information,
     // such as Reponse/Assertion/Attributes, from the returned map.
     // You might not need them in your real application code.
-    com.hmg.servicecloud.fedlet.saml.SAMLResponse samlResponse = (com.hmg.servicecloud.fedlet.saml.SAMLResponse) session.getAttribute("SAML_RESPONSE");
+    SAMLResponse samlResponse = (SAMLResponse) session.getAttribute("SAML_RESPONSE");
+
+    if (samlResponse == null || samlResponse.getAssertion() == null || samlResponse.getNameId() == null) {
+        return;
+    }
 
     Response samlResp = samlResponse.getResponse();
     Assertion assertion = samlResponse.getAssertion();

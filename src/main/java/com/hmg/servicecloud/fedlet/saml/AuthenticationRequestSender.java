@@ -133,7 +133,7 @@ public class AuthenticationRequestSender {
     }
 
     public void send(HttpServletRequest request, HttpServletResponse response) throws SAML2Exception {
-        send(request, response);
+        send(request, response, Collections.<String, List<String>>emptyMap());
     }
 
     public void send(HttpServletRequest request, HttpServletResponse response, Map<String,List<String>> authnRequestParams) throws SAML2Exception {
