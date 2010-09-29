@@ -47,7 +47,7 @@ public class FedletConfiguration {
         this.idpBaseUrl = idpBaseUrl;
     }
 
-    public static synchronized FedletConfiguration createFromMetaData(ServletContext context) throws SAML2MetaException {
+    public static synchronized FedletConfiguration createFromMetaData(String contextPath) throws SAML2MetaException {
 
         String spEntityId, spMetaAlias;
 
@@ -71,7 +71,7 @@ public class FedletConfiguration {
 
         String idpMetaAlias = parseIDPAliasFromMetadata(idpEntityId);
         String idpBaseUrl = parseIDPBaseURLFromMetadata(idpEntityId);
-        String spBaseUrl = parseSPBaseURLFromMetadata(spEntityId, context.getContextPath());
+        String spBaseUrl = parseSPBaseURLFromMetadata(spEntityId, contextPath);
 
         final FedletConfiguration fedletConfiguration = new FedletConfiguration(spEntityId, spMetaAlias, spBaseUrl, idpEntityId, idpMetaAlias, idpBaseUrl);
         log.info("Loaded fedletConfiguration: " + fedletConfiguration.toString());

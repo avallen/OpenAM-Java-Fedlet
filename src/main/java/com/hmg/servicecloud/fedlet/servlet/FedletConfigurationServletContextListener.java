@@ -7,6 +7,8 @@ import com.sun.identity.saml2.meta.SAML2MetaException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Andreas Vallen
@@ -15,23 +17,22 @@ public class FedletConfigurationServletContextListener implements ServletContext
 
     public static String FEDLET_CONFIG_ATTR = "fedletConfig";
     private static final String SAML_REQUEST_SENDER = "samlSender";
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-    @Override
     public void contextInitialized(ServletContextEvent sce) {
 
         ServletContext context = sce.getServletContext();
         try {
-            FedletConfiguration fedletConfiguration = FedletConfiguration.createFromMetaData(context);
+            FedletConfiguration fedletConfiguration = FedletConfiguration.createFromMetaData(context.getContextPath());
             context.setAttribute(FEDLET_CONFIG_ATTR, fedletConfiguration);
 
             SAMLRequestSender samlRequestSender = new SAMLRequestSender(fedletConfiguration);
             context.setAttribute(SAML_REQUEST_SENDER, samlRequestSender);
         } catch (SAML2MetaException e) {
-            throw new IllegalStateException("Error while loading fedlet's configuration: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Error while loading fedlet's configuration: " + e.getMessage(), e);
         }
     }
 
-    @Override
     public void contextDestroyed(ServletContextEvent sce) {
     }
 }

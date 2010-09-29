@@ -35,9 +35,10 @@ public class SAMLSessionCheckFilter implements Filter {
         } else {
             this.sessionCheckIntervalSeconds = 600;
         }
+        // put into servlet context, so the JSP sessionCheck.jsp can display the configured interval.
+        config.getServletContext().setAttribute("sessionCheckIntervalSeconds", new Long(this.sessionCheckIntervalSeconds));
     }
 
-    @Override
     public void destroy() {
     }
 

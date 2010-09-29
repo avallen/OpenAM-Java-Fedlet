@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface UserSessionAdapter {
 
-    public void createUserSessionFromValidatedSAMLResponse(HttpServletRequest request, SAMLResponse samlResponse);
+    void createUserSessionFromValidatedSAMLResponse(HttpServletRequest request, SAMLResponse samlResponse);
 
+    boolean hasSamlSession(HttpServletRequest request);
+
+    void invalidateSessionForSamlSessionIndex(String sessionIndex);
 }

@@ -53,8 +53,8 @@ public class AssertionConsumerServlet extends javax.servlet.http.HttpServlet {
             // case there remains nothing to be done here, in fact it is not possible anymore
             // to write to the response, because it has already been redirected.
             if (e.isRedirectionDone()) {
-                logger.info("The validation of the SAML response failed. A redirect has already been" +
-                        "performed by the validation code.");
+                logger.info("The validation of the SAML response failed. A redirect has already been " +
+                        "performed by HMGSPAdapter.");
                 return;
             }
 

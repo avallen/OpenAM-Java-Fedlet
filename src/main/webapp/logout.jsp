@@ -28,7 +28,9 @@
 <%@ page language="java"
         import="com.sun.identity.saml2.common.SAML2Utils,
 java.util.Enumeration"
-%><%
+%>
+<%@ page import="com.hmg.servicecloud.fedlet.adapter.SimpleUserSessionAdapter" %>
+<%
     /**
      * If header SLOStatus doesn't exist, it's IDP initiated SLO. Log user out.
      *    Besides "Cookie" header, other SLO related headers are: "IDP", "SP",
@@ -44,9 +46,14 @@ java.util.Enumeration"
     Enumeration headers = request.getHeaderNames();
     while (headers.hasMoreElements()) {
         String name = (String) headers.nextElement();
+        String value = request.getHeader(name);
+
         if (SAML2Utils.debug.messageEnabled()) {
             SAML2Utils.debug.message(
-                "header name=" + name + " value=" + request.getHeader(name));
+                "header name=" + name + " value=" + value);
+        }
+        if (name.equals("SessionIndex")) {
+            new SimpleUserSessionAdapter().invalidateSessionForSamlSessionIndex(value);
         }
     }
 %>

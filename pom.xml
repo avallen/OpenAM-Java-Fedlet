@@ -51,22 +51,22 @@
         <dependency>
             <groupId>com.forgerock.openam</groupId>
             <artifactId>opensso-sharedlib</artifactId>
-            <version>20100913</version>
+            <version>20100929</version>
         </dependency>
         <dependency>
             <groupId>com.forgerock.openam</groupId>
             <artifactId>openfedlib</artifactId>
-            <version>20100913</version>
+            <version>20100929</version>
         </dependency>
         <dependency>
             <groupId>com.forgerock.openam</groupId>
             <artifactId>idpdiscovery</artifactId>
-            <version>20100913</version>
+            <version>20100929</version>
         </dependency>
         <dependency>
             <groupId>com.forgerock.openam</groupId>
             <artifactId>esapiport</artifactId>
-            <version>20100913</version>
+            <version>20100929</version>
         </dependency>
 
         <!--  The following dependencies either do not exist in a public

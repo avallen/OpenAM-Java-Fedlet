@@ -1,3 +1,5 @@
+<%@include file="fedletconfig.jsp" %>
+
 <html>
 
 <head>
@@ -46,3 +48,21 @@
         src="<%= request.getContextPath() %>/com_sun_web_ui/images/other/dot.gif"
         alt="Jump Over Tab Navigation Area. Current Selection is: Access Control"
         border="0" height="1" width="1"/></a></div>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tbody>
+    <tr>
+        <td>
+            <a href="<%= request.getContextPath() %>/validateSetup.jsp">Validate Setup</a>&nbsp;|&nbsp;
+            <a href="<%= request.getContextPath() %>/sessionCheck.jsp">Automatic Session Check</a>&nbsp;|&nbsp;
+            <a href="<%= request.getContextPath() %>/index.jsp">SSO Request SP->IDP</a>&nbsp;|&nbsp;
+            <a href="<%= request.getContextPath() %>/idpinitiatedsso.jsp">SSO Response IDP->SP</a>&nbsp;|&nbsp;
+            <% if (userSessionAdapter.hasSamlSession(request)) { %>
+            <a href="<%= request.getContextPath() %>/spinitiatedslo.jsp">SLO Request SP->IDP</a>&nbsp;|&nbsp;
+            <a href="<%= request.getContextPath() %>/idpinitiatedslo.jsp">SLO Request IDP->SP</a>&nbsp;|&nbsp;
+            <% } %>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<%@include file="samlVars.jsp" %>
