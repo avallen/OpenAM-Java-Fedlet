@@ -59,18 +59,18 @@ public class HMGSPAdapter extends SAML2ServiceProviderAdapter {
         // stored in the session.
         final HttpSession session = request.getSession();
 
-        final String returnToUrl = (String) session.getAttribute(FedletConstants.FEDLET_RETURN_TO_URL);
+        final String returnToUrl = (String) session.getAttribute(FedletConstants.FEDLET_RETURN_TO_URL_ATTR);
         if (returnToUrl != null) {
-            logger.info("The session attribute FEDLET_RETURN_TO_URL is set, performing a redirect to this URL: "
+            logger.info("The session attribute FEDLET_RETURN_TO_URL_ATTR is set, performing a redirect to this URL: "
                     + returnToUrl);
-            session.removeAttribute(FedletConstants.FEDLET_RETURN_TO_URL);
+            session.removeAttribute(FedletConstants.FEDLET_RETURN_TO_URL_ATTR);
             try {
                 response.sendRedirect(returnToUrl);
             } catch (IOException e) {
             }
             return true; // in any case, if the redirect fails there has possibly already been another redirection.
         } else if (this.defaultReturnToURLOnNoPassiveResponse != null) {
-            logger.info("No session attribute FEDLET_RETURN_TO_URL is set, performing a redirect to the URL " +
+            logger.info("No session attribute FEDLET_RETURN_TO_URL_ATTR is set, performing a redirect to the URL " +
                     "configured as defaultReturnToURLOnNoPassiveResponse in sp-extended.xml:" +
                     this.defaultReturnToURLOnNoPassiveResponse);
             try {
@@ -80,7 +80,7 @@ public class HMGSPAdapter extends SAML2ServiceProviderAdapter {
             return true; // in any case, if the redirect fails there has possibly already been another redirection.
         } else {
             logger.info("Did not find neither a URL that could be used to redirect to after the error. " +
-                    "Neither the FEDLET_RETURN_TO_URL session attribute is set nor the defaultReturnToURLOnNoPassiveResponse " +
+                    "Neither the FEDLET_RETURN_TO_URL_ATTR session attribute is set nor the defaultReturnToURLOnNoPassiveResponse " +
                     "parameter set in sp-extended.xml.");
             return false;
         }

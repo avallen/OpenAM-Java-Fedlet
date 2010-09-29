@@ -1,6 +1,7 @@
 package com.hmg.servicecloud.fedlet.adapter;
 
 import com.hmg.servicecloud.fedlet.saml.SAMLResponse;
+import com.hmg.servicecloud.fedlet.util.FedletConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,11 +27,10 @@ public class SimpleUserSessionAdapter implements UserSessionAdapter {
     // where invalidation can occur by other means than being invalidated by
     // this class.
     private static Map<String, HttpSession> sessionIndexToSessionMap = Collections.synchronizedMap(new HashMap<String, HttpSession>());
-    public static final String SAML_RESPONSE_ATTR = "SAML_RESPONSE_ATTR";
 
     public void createUserSessionFromValidatedSAMLResponse(HttpServletRequest request, SAMLResponse samlResponse) {
         final HttpSession session = request.getSession();
-        session.setAttribute(SAML_RESPONSE_ATTR, samlResponse);
+        session.setAttribute(FedletConstants.SAML_RESPONSE_ATTR, samlResponse);
         String sessionIndex = samlResponse.getSessionIndex();
         if (sessionIndex == null) {
             throw new IllegalStateException("Unexpected error: a supposedly validated sucessful SAML Response does not contain a sessionIndex value!");
@@ -44,7 +44,7 @@ public class SimpleUserSessionAdapter implements UserSessionAdapter {
         if (session == null) {
             return false;
         }
-        return session.getAttribute(SAML_RESPONSE_ATTR) != null;
+        return session.getAttribute(FedletConstants.SAML_RESPONSE_ATTR) != null;
     }
 
     public void invalidateSessionForSamlSessionIndex(String sessionIndex) {

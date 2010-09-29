@@ -3,6 +3,7 @@
 <%@ page import="com.sun.identity.saml2.assertion.NameID" %>
 <%@ page import="com.sun.identity.saml2.assertion.Subject" %>
 <%@ page import="com.sun.identity.saml2.protocol.Response" %>
+<%@ page import="com.hmg.servicecloud.fedlet.util.FedletConstants" %>
 <%
 
     // Following code shows how to retrieve information,
@@ -11,7 +12,7 @@
 
     // The SimpleUserSessionAdapter puts the SAMLResponse object in the
     // session in case of successful verification.
-    SAMLResponse samlResponse = (SAMLResponse) session.getAttribute(SimpleUserSessionAdapter.SAML_RESPONSE_ATTR);
+    SAMLResponse samlResponse = (SAMLResponse) session.getAttribute(FedletConstants.SAML_RESPONSE_ATTR);
 
     Response samlResp = null;
     Assertion assertion = null;

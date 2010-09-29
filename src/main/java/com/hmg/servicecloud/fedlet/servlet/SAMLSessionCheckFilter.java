@@ -50,7 +50,7 @@ public class SAMLSessionCheckFilter implements Filter {
         if (secondsSincelastSessionCheck > this.sessionCheckIntervalSeconds) {
 
             final String requestURL = HttpUtils.getRequestURL((HttpServletRequest) req).toString();
-            session.setAttribute(FedletConstants.FEDLET_RETURN_TO_URL, requestURL);
+            session.setAttribute(FedletConstants.FEDLET_RETURN_TO_URL_ATTR, requestURL);
             updateTimeOfLastSessionCheck(session);
             try {
                 samlSender.sendPassiveAuthnRequestReturnTo((HttpServletRequest) req, (HttpServletResponse) resp, requestURL);

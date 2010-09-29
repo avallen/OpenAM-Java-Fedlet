@@ -6,12 +6,15 @@ The following features have been added:
 
 * Move code from JSP templates to classes
 * Provide implementation of SPAdapter SPI for custom response evaluation
+* Provide implementation of FedletAdapter SPI for acting on Single Logout requests and responses.
+* Provide helper classes for easy dispatching of Authentication Requests
+* Provide Helper class for initializing the fedlet configuration
 * Split functionality into different pages
 * Provide navigation menu
 * Show Session Status on each page
 * Support invalidation of local Servlet session by Single Logout
 * Add link to issue Authentication request that is paramatrized with IsPassive=true
-* Provide demo application of a servlet filter that realizes an automatic session check
+* Provide a servlet filter that demonstrates an automatic session check
 
 
 The following functionality has been removed:
@@ -19,6 +22,12 @@ The following functionality has been removed:
 * No support anymore for selecting among multiple configured IDPs
 * Removed XACML and AttributeQuery requests from the demo UI
 * Automatic setup of configuration directory is not done anymore
+
+
+The following TODOs come to mind:
+
+* Also provide utilty methods for sending Single Logout Requests
+*
 
 
 How to build:
