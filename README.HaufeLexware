@@ -1,0 +1,111 @@
+
+This is a heavily refactored version of the original fedlet that is
+provided by OpenSSO.
+
+The following features have been added:
+
+* Move code from JSP templates to classes
+* Provide implementation of SPAdapter SPI for custom response evaluation
+* Split functionality into different pages
+* Provide navigation menu
+* Show Session Status on each page
+* Support invalidation of local Servlet session by Single Logout
+* Add link to issue Authentication request that is paramatrized with IsPassive=true
+* Provide demo application of a servlet filter that realizes an automatic session check
+
+
+The following functionality has been removed:
+
+* No support anymore for selecting among multiple configured IDPs
+* Removed XACML and AttributeQuery requests from the demo UI
+* Automatic setup of configuration directory is not done anymore
+
+
+How to build:
+=============
+
+In contrast to the OpenSSO fedlet, the Haufe-Lexware one is designed
+to be distributed in source and built by the partner himself, so
+that its inner workings remain transparent even after moving the
+code out of JSPs and into classes.
+
+The build system uses maven. The maven build configuration (pom.xml)
+declares some jar libraries as dependencies, that the build process
+will try to download from public maven repositories which will fail
+as these libraries are not available there.
+
+Execute the following maven command in order to try to build:
+
+> mvn package
+
+You will find error messages in the output complaining about the
+missing dependencies such as these:
+
+        Missing:
+        ----------
+        1) com.forgerock.openam:opensso-sharedlib:jar:20100925
+
+          Try downloading the file manually from the project website.
+
+          Then, install it using the command:
+              mvn install:install-file -DgroupId=com.forgerock.openam -DartifactId=opensso-sharedlib -Dversion=20100929 -Dpackaging=jar -Dfile=/path/to/file
+
+          Alternatively, if you host your own repository you can deploy the file there:
+              mvn deploy:deploy-file -DgroupId=com.forgerock.openam -DartifactId=opensso-sharedlib -Dversion=20100929 -Dpackaging=jar -Dfile=/path/to/file -Durl=[url] -DrepositoryId=[id]
+
+          Path to dependency:
+            1) com.hmg.servicecloud:hmg_fedlet:war:1.0.0-SNAPSHOT
+            2) com.forgerock.openam:opensso-sharedlib:jar:20100925
+
+In order to fix this, you execute the first of the recommended commands
+replacing "/path/to/file" with the path of the required library. You
+find the libraries inside the WEB-INF/lib directory of the distribution.
+
+An example command would be:
+
+> mvn install:install-file -DgroupId=com.forgerock.openam -DartifactId=opensso-sharedlib -Dversion=20100929 -Dpackaging=jar -Dfile=fedlet_unzipped/src/main/webapp/WEB-INF/lib/opensso-sharedlib.jar
+
+Repeat this until all dependencies are "installed" (maven speak for
+copying them into your local maven artifact repository).
+
+After this the build should succeed, leaving you with the built war
+artifact in the "target" subdirectory of the fedlet directory.
+
+How to deploy
+=============
+
+You can either deploy the war in a servlet container of your choosing
+but you could also use the maven jetty plugin in order to have maven
+itself start an embedded jetty servlet container and auto-deploy and
+serve the fedlet war.
+
+You'd do the latter via:
+
+> mvn jetty:run
+
+
+How to setup:
+=============
+
+In contrast to the OpenAM-provided Fedlet, this version will not
+create your configuration directory automatically. Also it does
+not depend on being already correctly configured. Instead you
+configure the fedlet at deployment time.
+
+For this follow these steps:
+
+* Create the directory USER_HOME/fedlet
+* Copy the files from the conf directory of the zip file into this directory.
+* Inside this directoy execute the shell script create_config.sh (see below)
+
+The create_config.sh Unix shell script does a simple search and replace of
+the IDP and SP Base-URLs, respectively Entity IDs. Note this only works
+if the entity ID is set to this Base-URL, as is the recommended convention.
+If the latter is not the case, then please modify the configuration files
+manually.
+
+
+How to use:
+===========
+
+TODO: describe usecases here or in Wiki?

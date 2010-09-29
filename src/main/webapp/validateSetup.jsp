@@ -24,7 +24,7 @@
                     <br><br>Click <a href="index.jsp?CreateConfig=true">here</a> to create Fedlet configuration automatically.
                     <br>Or manually extract your fedlet.war and copy all files under "conf" directory to "<%= fedletUtil.getFedletConfigDir() %>" directory, then restart your web container.
              <% } else { %>
-                   <br/>Please follow the README bundled inside your Fedlet-unconfigured.zip file to setup Fedlet configuration, then restart your web container.
+                   <br/>Please follow the README bundled in the zip file to setup Fedlet configuration, then restart your web container.
              <% } %>
              </body></html>
              <%

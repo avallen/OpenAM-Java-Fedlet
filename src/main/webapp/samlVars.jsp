@@ -5,10 +5,13 @@
 <%@ page import="com.sun.identity.saml2.protocol.Response" %>
 <%
 
-    // Following are sample code to show how to retrieve information,
-// such as Reponse/Assertion/Attributes, from the returned map.
-// You might not need them in your real application code.
-    SAMLResponse samlResponse = (SAMLResponse) session.getAttribute("SAML_RESPONSE");
+    // Following code shows how to retrieve information,
+    // such as Reponse/Assertion/Attributes, from the returned map.
+    // You might not need them in your real application code.
+
+    // The SimpleUserSessionAdapter puts the SAMLResponse object in the
+    // session in case of successful verification.
+    SAMLResponse samlResponse = (SAMLResponse) session.getAttribute(SimpleUserSessionAdapter.SAML_RESPONSE_ATTR);
 
     Response samlResp = null;
     Assertion assertion = null;

@@ -1,4 +1,5 @@
 <%@include file="fedletconfig.jsp" %>
+<%@include file="samlVars.jsp" %>
 
 <html>
 
@@ -65,4 +66,4 @@
     </tbody>
 </table>
 
-<%@include file="samlVars.jsp" %>
+
